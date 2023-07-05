@@ -2,6 +2,7 @@ import { SafeAreaView, Text, View } from "react-native";
 import { SplashScreen, Stack, usePathname } from "expo-router";
 
 import { api } from "~/utils/api";
+import TidalChart from "~/components/TidalChart";
 
 function Station() {
     const pathname = usePathname();
@@ -11,15 +12,16 @@ function Station() {
 
     if (!data) return <SplashScreen />;
 
-    const stationData: any = JSON.parse(data);
+    const tidesData: any = JSON.parse(data);
+
+    console.log(tidesData.products);
 
     return (
         <SafeAreaView className="bg-[#1F104A]">
             {/* eslint-disable-next-line @typescript-eslint/no-unsafe-member-access */}
-            <Stack.Screen options={{ title: `${stationData.stationName}` }} />
+            <Stack.Screen options={{ title: `${tidesData.stationName}` }} />
             <View className="h-full w-full p-4">
-                <Text className="py-2 text-3xl font-bold text-white">{id}</Text>
-                <Text className="py-4 text-white">{id}</Text>
+                <TidalChart data={tidesData.products}/>
             </View>
         </SafeAreaView>
     );
