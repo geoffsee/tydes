@@ -32,7 +32,14 @@ const defineConfig = (): ExpoConfig => ({
       // projectId: "your-project-id",
     },
   },
-  plugins: ["./expo-plugins/with-modify-gradle.js"],
+  plugins: ["./expo-plugins/with-modify-gradle.js",
+    [
+      "expo-location",
+      {
+        "locationWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+      }
+    ]
+  ],
 });
 
 export default defineConfig;

@@ -13,6 +13,7 @@ import { ZodError } from "zod";
 
 import { getServerSession, type Session } from "@acme/auth";
 import { prisma } from "@acme/db";
+import TidesService from "./service/tides.service"
 
 /**
  * 1. CONTEXT
@@ -40,6 +41,7 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
   return {
     session: opts.session,
     prisma,
+    tidesService: new TidesService()
   };
 };
 

@@ -7,14 +7,52 @@ generator client {
 }
 
 datasource db {
-    provider = "postgresql"
+    provider = "sqlite"
     url      = env("DATABASE_URL")
 }
 
-model Post {
-    id      String @id @default(cuid())
-    title   String
-    content String
+
+// Stores the master list of stations from sloshdata
+model ETStation {
+    id String @id @default(uuid())
+    stationId String
+    date String
+    time String
+    waterLevel Meters
+    significantWaveHeight Meters
+    peakPeriod Seconds
+    meanPeriod Seconds
+    direction Degrees
+}
+
+model ETData {
+    id String @id @default(uuid())
+    ss Float
+    ts String
+    pred Float
+    obs Float
+    anom Float
+    twl Float
+}
+
+enum Units {
+    Meters
+    Feet
+    Kilometers
+    Miles
+}
+
+type Meters {
+    value Float
+    unit Units
+}
+
+type Seconds {
+    value Int
+}
+
+type Degrees {
+    value Float
 }
 
 // NextAuth.js Models
