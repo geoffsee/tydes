@@ -10,7 +10,7 @@ export const tidesRouter = createTRPCRouter({
     .input(z.object({ stationID: z.string() }))
     .query(async ({ ctx, input }) => {
       const stations = await ctx.tidesService.getStations();
-      const stationName: string = stations.find(station => station.stationId === input.stationID)?.stationName ?? 'NO STATION NAME';
+      const stationName: string = stations.find(station => station.stationid === input.stationID)?.stationname ?? 'LOCAL STATION DATA';
       const rawData = await ctx.tidesService.getStationTideData(input.stationID);
 
       return ctx.tidesService.createJSONProduct(stationName, input.stationID, rawData);

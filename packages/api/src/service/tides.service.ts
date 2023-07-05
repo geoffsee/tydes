@@ -28,6 +28,7 @@ class StationDataService {
       "method": "POST"
     });
 
+
     return await req.json() as ProductDataInput;
   }
 
