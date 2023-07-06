@@ -1,19 +1,40 @@
-import { Stack } from 'expo-router';
-import React, {type ReactElement, useEffect} from 'react';
-import { View, Text, Button } from 'react-native';
-import {StationSelector} from "~/components/StationSelector";
+import {Stack, useRouter} from 'expo-router';
+import React, {Fragment, type ReactElement, useEffect} from 'react';
 import {api} from "~/utils/api";
 import type {StationData} from "@acme/api/src/service/tides.types";
+import MapView, {Marker, type Region} from 'react-native-maps';
+import * as Location from 'expo-location';
 
 interface Props {
     navigation: any;
 }
 
-const Welcome: React.FC<Props> = ({ navigation }): ReactElement => {
+const Welcome: React.FC<Props> = ({navigation}): ReactElement => {
     const [stations, setStations] = React.useState<StationData[]>();
-    const { data } = api.data.allStations.useQuery();
+    const [region, setRegion] = React.useState<Region>();
+    const {data} = api.data.allStations.useQuery();
+    const router = useRouter();
     useEffect(() => {
-        if(!stations) {
+        void (async () => {
+            const {status} = await Location.requestForegroundPermissionsAsync();
+
+            if (status !== 'granted') {
+                alert('Permission to access location was denied');
+                return;
+            }
+
+            const location = await Location.getCurrentPositionAsync({});
+            setRegion({
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+            });
+        })();
+    }, []);
+
+    useEffect(() => {
+        if (!stations) {
             // eslint-disable-next-line @typescript-eslint/require-await
             void (async () => {
                 setStations(data);
@@ -22,13 +43,29 @@ const Welcome: React.FC<Props> = ({ navigation }): ReactElement => {
     }, [data]);
 
     return (
-        <View className="justify-center items-center flex-1">
-            <Stack.Screen options={{ title: "Welcome" }} />
-
-            <Text>Configure</Text>
-            <StationSelector stations={stations}/>
-
-        </View>
+        <Fragment>
+            <Stack.Screen options={{title: "Stations"}}/>
+            <MapView
+                style={{flex: 1}}
+                initialRegion={region}
+                showsMyLocationButton={true}
+                showsUserLocation={true}
+                followsUserLocation={true}
+                zoomControlEnabled={true}
+                loadingEnabled={true}
+                maxZoomLevel={20}
+            >
+                {stations?.map((station, index) => (
+                    <Marker
+                        key={index}
+                        coordinate={{latitude: station.stationlat, longitude: station.stationlon}}
+                        title={station.stationname ?? "No name"}
+                        onCalloutPress={() => router.push(`/station/${station.stationid}`)}
+                    >
+                    </Marker>
+                ))}
+            </MapView>
+        </Fragment>
     );
 };
 

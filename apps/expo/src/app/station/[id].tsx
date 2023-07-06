@@ -14,7 +14,6 @@ function Station() {
 
     const tidesData: any = JSON.parse(data);
 
-    console.log(tidesData.products);
 
     return (
         <SafeAreaView className="bg-[#1F104A]">

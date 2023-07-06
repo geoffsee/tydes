@@ -32,15 +32,24 @@ class StationDataService {
     return await req.json() as ProductDataInput;
   }
 
+  parseDate = (dateString: string): number => {
+    const year = parseInt(dateString.slice(0, 4));
+    const month = parseInt(dateString.slice(4, 6)) - 1; // as months are 0-indexed
+    const day = parseInt(dateString.slice(6, 8));
+    const hours = parseInt(dateString.slice(8, 10));
+    const minutes = parseInt(dateString.slice(10, 12));
 
+    return new Date(year, month, day, hours, minutes).valueOf();
+  }
   public createJSONProduct(stationName: string, stationId: string, input: ProductDataInput): string {
     const products: Partial<StationDataFrame>[] = [];
     for (let i = 480; i < input['ts'].length; i += 10) {
       const product: StationDataFrame = {} as StationDataFrame;
-      const timestampFromData = input['ts'][i];
+      // 202307090300
+      const timestampFromData = this.parseDate(input['ts'][i]);
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-assignment
-      product.ts = moment(timestampFromData, 'YYYYMMDDHHmm').format('MM/DD HH');
+      product.ts = timestampFromData;
       ['ss', 'pred', 'obs', 'twl', 'anom'].forEach((key: string) => {
 
         const group = input[key];
@@ -59,7 +68,6 @@ class StationDataService {
       mdatum: 'Height in Feet MLLW',
       products
     };
-
     return JSON.stringify(output);
   }
 

@@ -20,7 +20,7 @@ export type StationData = {
 }
 
 export type StationDataFrame = {
-  ts: string;
+  ts: string | number | Date;
   ss: number | null;
   ti: number | null;
   ob: number | null;

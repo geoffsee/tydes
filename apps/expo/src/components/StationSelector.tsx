@@ -91,7 +91,6 @@ export const StationSelector: React.FC<NearestStationProps> = ({stations}) => {
                 title="Find nearest station"
                 onPress={() => {
                     const station = findNearestStation()
-                    console.log(station);
                     router.push(`/station/${station?.stationid}`)
                 }}
             />
