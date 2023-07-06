@@ -18,8 +18,12 @@ const RootLayout = () => {
         <Stack
           screenOptions={{
             headerStyle: {
-              backgroundColor: "#f472b6",
+              backgroundColor: "#808080",
             },
+              headerTintColor: '#FFFDD0',
+              headerTitleStyle: {
+                  fontWeight: 'bold',
+              },
           }}
         />
         <StatusBar />
