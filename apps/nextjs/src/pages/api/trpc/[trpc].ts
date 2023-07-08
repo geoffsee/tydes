@@ -1,7 +1,6 @@
 import { createNextApiHandler } from "@trpc/server/adapters/next";
 
 import { appRouter, createTRPCContext } from "@acme/api";
-export const runtime = 'edge';
 
 // export API handler
 export default createNextApiHandler({
